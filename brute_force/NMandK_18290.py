@@ -1,38 +1,39 @@
-def solution(index, N, M, z, mapping_list, sum_number, result, index_list, visited_list, dx, dy):
-    if index == z:
-        if sum_number > result:
-            result = sum_number
-        return result
-    for i in range(0, M):
-        for j in range(0, N):
+
+def NMK(index,start_i, start_j, N, M, numbers_list, visited_list, selected_list, max, x, y):
+    if index == len(selected_list):
+        sum = 0
+        for i in selected_list:
+            sum += i
+        if max < sum:
+            max = sum
+        return max
+    for i in range(start_i, N):
+        for j in range(start_j if start_i == i else 0, M):
             if visited_list[i][j] == True:
-                break
-            ok = True
-            for k in range(0, 4):
-                nx = i+dx[k]
-                ny = j+dy[k]
-                if 0<=nx and nx<M and 0<=ny and ny < N:
-                    if visited_list[nx][ny] :
-                        ok = False
-
-            if ok == True:
+                continue
+            check = True
+            for k in range(0,4):
+                xx = i + x[k]
+                yy = j + y[k]
+                if 0 <= xx < N and 0 <= yy < M:
+                    if visited_list[xx][yy] == True:
+                        check = False
+            if check:
                 visited_list[i][j] = True
-                result = solution(index+1, N, M, z, mapping_list, sum_number+mapping_list[i][j],
-                                  result, index_list, visited_list, dx, dy)
+                selected_list[index] = numbers_list[i][j]
+                max = NMK(index+1, i, j, N, M, numbers_list, visited_list, selected_list, max, x, y)
                 visited_list[i][j] = False
-    return result
-
-
+    return max
 if __name__ == "__main__":
-    number_list = list(map(int, input().split()))
-    mapping_list = [list(map(int, input().split())) for _ in range(0,number_list[1])]
+    x = [0, 0, 1, -1]
+    y = [1, -1, 0, 0]
+    numbers = list(map(int, input().split()))
+    numbers_list = [list(map(int, input().split())) for i in range(0, numbers[0])]
+    visited_list = [[False] * numbers[1] for i in range(0, numbers[0])]
+    selected_list = [0] * numbers[2]
     index = 0
-    sum_number = 0
-    result = 0
-    dx = [0, 0, 1, -1]
-    dy = [1, -1, 0, 0]
-    visited_list = [[False]*number_list[0] for _ in range(0, number_list[1])]
-    index_list = list()
-    result = solution(index, number_list[0], number_list[1], number_list[2],
-                      mapping_list, sum_number, result, index_list, visited_list, dx, dy)
-    print(result)
+    max = -2147483647
+    start_i = 0
+    start_j = 0
+    max = NMK(index, start_i, start_j, numbers[0], numbers[1], numbers_list, visited_list, selected_list, max, x, y)
+    print(max)
