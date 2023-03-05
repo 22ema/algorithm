@@ -5,8 +5,7 @@
 
 using namespace std;
 
-// 0,1 2,3 || 0,2 1,3 || 0,3 2,1
-// 학생 쌍이 1개인 경우
+// bruteForce
 
 int picnic(vector<int>& number_students, bool save_vec[][10], bool taken[10]){
     int i, j, ret=0;
